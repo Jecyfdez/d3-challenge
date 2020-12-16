@@ -70,13 +70,29 @@ d3.csv("assets/data/data.csv").then(function(healthData){
     .attr("opacity", ".8");
 
 
+        // Create abbrivation of states to show on the circle
+        
+        var textGroup = chartGroup
+        .selectAll(".stateText")
+        .data(healthData)
+        .enter()
+        .append("text")
+        .classed("stateText", true)
+        .attr("x", d => xLinearScale(d.poverty))
+        .attr("y", d => yLinearScale(d.smokes))
+        .attr("dy", 3)
+        .attr("font-size", "10px")
+        .text(function(data) {
+          return data.abbr;
+        });
+
     // // Step 6: Initialize tool tip
     // // ==============================
     var toolTip = d3.tip()
       .attr("class", "tooltip")
       .offset([80, -60])
       .html(function(d) {
-        return (`${d.state}<br> Poverty: ${d.poverty}<br> Smokes : ${d.smokes}`);
+        return (`${d.state}<br> Poverty: ${d.poverty} % <br> Smokes : ${d.smokes} `);
       });
 
     // Step 7: Create tooltip in the chart
@@ -88,7 +104,7 @@ d3.csv("assets/data/data.csv").then(function(healthData){
     circlesGroup.on("click", function(data) {
         toolTip.show(data, this);
       })
-        // onmouseout event
+        // on mouseout event
         .on("mouseout", function(data, index) {
           toolTip.hide(data);
         });
